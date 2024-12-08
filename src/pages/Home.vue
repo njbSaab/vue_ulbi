@@ -1,15 +1,19 @@
-
 <template>
   <section class="mx-auto w-[95%] md:w-[800px]">
     <h1 class="text-3xl font-bold mb-4">{{ title }}</h1>
-    <PostForm :on-add="addPost" />
-    <PostList :posts="sortedPosts" @update:posts="updatePosts" />
+    <PostForm @on-add="addPost" />
+    <PostList
+      :posts="sortedPosts"
+      @delete-post="deletePost"
+      @update:posts="updatePosts"
+    />
   </section>
 </template>
 
 <script setup>
 import PostForm from "@/components/PostForm.vue";
 import PostList from "@/components/BlogList.vue";
+
 import { ref, computed } from "vue";
 
 const title = ref("Welcome to Vuetify Blog");
@@ -44,8 +48,13 @@ const posts = ref([
     isActive: false,
   },
 ]);
+
 const addPost = (newPost) => {
   posts.value.push(newPost);
+};
+
+const deletePost = (post) => {
+  posts.value = posts.value.filter((p) => p !== post);
 };
 
 const sortedPosts = computed(() => {

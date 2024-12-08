@@ -1,12 +1,12 @@
 <template>
-  <div class="icon-btn">
-    <svg-icon type="mdi" :path="path"></svg-icon>
-    <slot></slot>
+  <div class="icon-btn" @click="$emit('click')">
+    <slot>
+      <v-btn icon :icon="path" size="small"></v-btn>
+    </slot>
   </div>
 </template>
 
 <script setup>
-import SvgIcon from '@jamescoyle/vue-icon';
 
 // Получение `path` как пропса для динамической иконки
 const props = defineProps({
@@ -18,7 +18,6 @@ const props = defineProps({
 </script>
 
 <style>
-/* Ваши стили для кнопки */
 .icon-btn {
   display: flex;
   align-items: center;

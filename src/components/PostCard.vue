@@ -1,6 +1,6 @@
 <template>
   <v-card class="mx-auto flex flex-col my-8">
-    <div class="header flex items-center px-4 py-2 gap-4">
+    <div class="header flex items-center px-4 py-2 gap-4 relative">
       <v-avatar class="mx-auto my-4" size="60">
         <v-img :src="post.href" alt="Image"></v-img>
       </v-avatar>
@@ -8,8 +8,11 @@
         <v-card-title>{{ post.cardTitle }}</v-card-title>
         <v-card-subtitle>{{ formatDate(post.cardSubtitle) }}</v-card-subtitle>
       </div>
-      <!-- Слот для кастомной кнопки -->
-      <!-- <slot name="custom-button"></slot> -->
+      <!-- Кнопка удаления -->
+      <IconBtn
+        :path="'mdi-close'"
+        @click="$emit('delete-post', post)"
+      />
     </div>
 
     <v-card-text>{{ post.cardText }}</v-card-text>

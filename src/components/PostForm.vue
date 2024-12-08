@@ -1,83 +1,72 @@
-// PostForm.vue
 <template>
-  <!-- Форма -->
-  <v-sheet class="mx-auto my-10">
-    <v-form validate-on="submit lazy" @submit.prevent="submit">
-      <v-text-field
-        v-model="userName"
-        :rules="rules"
-        label="User name"
-        color="deep-purple"
-      ></v-text-field>
-      <v-textarea
-        v-model="userPost"
-        clear-icon="mdi-close-circle"
-        label="Text"
-        clearable
-        color="deep-purple"
-      ></v-textarea>
-      <v-btn
-        :loading="loading"
-        text
-        type="submit"
-        block
-        color="deep-purple"
-      >
-        Submit
-      </v-btn>
-    </v-form>
-  </v-sheet>
-
+  <h1 class="text-2xl font-bold mb-4">Added your new post</h1>
+  <v-btn variant="tonal deep-purple" @click="showDialog">
+    Added
+  </v-btn>
+  <MyDialog :show="isDialogVisible" @update:show="isDialogVisible = $event">
+    <v-sheet class="mx-auto my-10">
+      <v-form validate-on="submit lazy" @submit.prevent="submit">
+        <!-- Используем MyInput -->
+        <MyInput
+          v-model="userName"
+          :rules="rules"
+          label="User name"
+          color="deep-purple"
+        />
+        <!-- Используем MyTextArea -->
+        <MyTextArea
+          v-model="userPost"
+          clearIcon="mdi-close-circle"
+          clearable
+          label="Text"
+          color="deep-purple"
+        />
+        <v-btn :loading="loading" text type="submit" block color="deep-purple">
+          Submit
+        </v-btn>
+      </v-form>
+    </v-sheet>
+  </MyDialog>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref } from 'vue';
 
-const props = defineProps({
-  posts: {
-    type: Array, // Должен быть массив, а не объект
-    required: true,
-  },
-});
-
-// Локальные состояния для ввода
+const emit = defineEmits(['on-add']);
 const userName = ref('');
 const userPost = ref('');
 const loading = ref(false);
+const isDialogVisible = ref(false);
 
 const rules = [(v) => !!v || 'Field is required'];
 
-// Отправка формы
+const showDialog = () => {
+  isDialogVisible.value = true;
+};
+
 const submit = () => {
   try {
     loading.value = true;
 
     setTimeout(() => {
-      const now = new Date();
-      const day = String(now.getDate()).padStart(2, '0');
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const year = now.getFullYear();
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-
       const newPost = {
         cardTitle: userName.value,
-        cardSubtitle: `${day}.${month}.${year} ${hours}:${minutes}`,
+        cardSubtitle: new Date().toISOString(),
         cardText: userPost.value,
-        icon: "mdi-shield-star-outline",
-        href: "https://cdn.vuetifyjs.com/images/john.jpg",
+        icon: 'mdi-shield-star-outline',
+        href: 'https://cdn.vuetifyjs.com/images/john.jpg',
         like: 0,
         isActive: false,
       };
 
-      props.posts.push(newPost); // Добавляем в переданный массив
+      emit('on-add', newPost);
       userName.value = '';
       userPost.value = '';
       loading.value = false;
+      isDialogVisible.value = false; // Закрываем диалог после успешного добавления
     }, 1000);
   } catch (error) {
-    console.error("Submit error:", error);
+    console.error(error);
   }
 };
 </script>
-

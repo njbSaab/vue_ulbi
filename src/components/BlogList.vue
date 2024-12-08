@@ -4,8 +4,7 @@
       v-for="(post, index) in posts"
       :key="index"
       :post="post"
-      @like="handleLike"
-      @toggle-active="handleToggleActive"
+      @delete-post="$emit('delete-post', $event)"
     />
   </div>
 </template>
@@ -20,13 +19,5 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["update:posts"]);
-
-const handleLike = (post) => {
-  post.like++;
-};
-
-const handleToggleActive = (post) => {
-  post.isActive = !post.isActive;
-};
+const emit = defineEmits(["delete-post"]);
 </script>
