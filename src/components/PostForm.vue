@@ -21,7 +21,7 @@
           label="Text"
           color="deep-purple"
         />
-        <v-btn :loading="loading" text type="submit" block color="deep-purple">
+        <v-btn :loading="loading" @click="!showDialog" text type="submit" block color="deep-purple">
           Submit
         </v-btn>
       </v-form>
@@ -37,6 +37,7 @@ const userName = ref('');
 const userPost = ref('');
 const loading = ref(false);
 const isDialogVisible = ref(false);
+const posts = ref([]);
 
 const rules = [(v) => !!v || 'Field is required'];
 
@@ -49,22 +50,20 @@ const submit = () => {
     loading.value = true;
 
     setTimeout(() => {
+      const id = posts.value.length + 1; // Используем длину массива постов
       const newPost = {
-        cardTitle: userName.value,
-        cardSubtitle: new Date().toISOString(),
-        cardText: userPost.value,
-        icon: 'mdi-shield-star-outline',
-        href: 'https://cdn.vuetifyjs.com/images/john.jpg',
-        like: 0,
-        isActive: false,
+        title: userName.value,
+        body: userPost.value,
+        id: id,
+        imageUrl: 'https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light',
       };
 
-      emit('on-add', newPost);
+      emit("on-add", newPost);
       userName.value = '';
       userPost.value = '';
       loading.value = false;
-      isDialogVisible.value = false; // Закрываем диалог после успешного добавления
-    }, 1000);
+      isDialogVisible.value = false;
+    }, 200);
   } catch (error) {
     console.error(error);
   }

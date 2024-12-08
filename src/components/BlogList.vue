@@ -1,12 +1,13 @@
 <template>
-  <div>
+    <transition-group name="post-list" tag="div">
     <PostCard
       v-for="(post, index) in posts"
       :key="index"
       :post="post"
       @delete-post="$emit('delete-post', $event)"
     />
-  </div>
+  </transition-group>
+
 </template>
 
 <script setup>
